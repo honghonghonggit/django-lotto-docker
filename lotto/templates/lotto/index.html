@@ -3,32 +3,51 @@
 <head>
     <title>6/45 Lotto</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-        .lotto-card { border: 1px solid #ccc; padding: 20px; display: inline-block; border-radius: 10px; }
-        input { width: 40px; padding: 5px; text-align: center; }
-        button { padding: 10px 20px; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px; }
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        .lotto-card { border: 1px solid #ccc; padding: 20px; display: inline-block; border-radius: 10px; margin-bottom: 20px; }
+        table { margin: 0 auto; border-collapse: collapse; width: 80%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        .win { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>6/45 Lotto 구매</h1>
+    <h1>6/45 Lotto 구매 및 확인</h1>
     <div class="lotto-card">
         <form method="POST">
             {% csrf_token %}
-            <h3>수동 구매 (번호 6개 입력)</h3>
-            <input type="number" name="n1" min="1" max="45">
-            <input type="number" name="n2" min="1" max="45">
-            <input type="number" name="n3" min="1" max="45">
-            <input type="number" name="n4" min="1" max="45">
-            <input type="number" name="n5" min="1" max="45">
-            <input type="number" name="n6" min="1" max="45">
-            <br><br>
-            <button type="submit" name="buy_type" value="manual">수동 구매하기</button>
-            <hr>
-            <h3>자동 구매</h3>
-            <button type="submit" name="buy_type" value="auto" style="background: #007bff;">자동 번호 생성 및 구매</button>
+            <h3>번호 구매</h3>
+            <input type="number" name="n1" min="1" max="45" required>
+            <input type="number" name="n2" min="1" max="45" required>
+            <input type="number" name="n3" min="1" max="45" required>
+            <input type="number" name="n4" min="1" max="45" required>
+            <input type="number" name="n5" min="1" max="45" required>
+            <input type="number" name="n6" min="1" max="45" required>
+            <button type="submit" name="buy_type" value="manual">수동 구매</button>
+            <button type="submit" name="buy_type" value="auto" style="background:#007bff; color:white;">자동 구매</button>
         </form>
     </div>
-    <br><br>
-    <a href="/admin">관리자 페이지로 이동</a>
+
+    <h2>최신 당첨 번호: {% if last_draw %}{{ last_draw.winning_numbers }}{% else %}추첨 전{% endif %}</h2>
+
+    <h3>나의 구매 내역</h3>
+    <table>
+        <tr>
+            <th>번호</th>
+            <th>유형</th>
+            <th>구매일시</th>
+            <th>당첨 여부</th>
+        </tr>
+        {% for item in results %}
+        <tr>
+            <td>{{ item.ticket.numbers }}</td>
+            <td>{{ item.ticket.is_auto|yesno:"자동,수동" }}</td>
+            <td>{{ item.ticket.created_at|date:"Y-m-d H:i" }}</td>
+            <td class="{% if '당첨' in item.is_winner %}win{% endif %}">{{ item.is_winner }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
+    <a href="/admin">관리자 페이지(추첨하기)</a>
 </body>
 </html>
