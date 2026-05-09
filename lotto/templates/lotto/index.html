@@ -17,12 +17,14 @@
         <form method="POST">
             {% csrf_token %}
             <h3>번호 구매</h3>
-            <input type="number" name="n1" min="1" max="45" required>
-            <input type="number" name="n2" min="1" max="45" required>
-            <input type="number" name="n3" min="1" max="45" required>
-            <input type="number" name="n4" min="1" max="45" required>
-            <input type="number" name="n5" min="1" max="45" required>
-            <input type="number" name="n6" min="1" max="45" required>
+            <!-- required 속성을 제거하여 빈 칸이어도 버튼 클릭이 가능하게 수정 -->
+            <input type="number" name="n1" min="1" max="45">
+            <input type="number" name="n2" min="1" max="45">
+            <input type="number" name="n3" min="1" max="45">
+            <input type="number" name="n4" min="1" max="45">
+            <input type="number" name="n5" min="1" max="45">
+            <input type="number" name="n6" min="1" max="45">
+            <br><br>
             <button type="submit" name="buy_type" value="manual">수동 구매</button>
             <button type="submit" name="buy_type" value="auto" style="background:#007bff; color:white;">자동 구매</button>
         </form>
